@@ -1,0 +1,26 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# macOS
+.DS_Store
+
+# Virtual environments
+.venv/
+venv/
+
+# Secrets / local config
+.env
+
+# Uploaded or private data (adjust if you keep small samples elsewhere)
+uploads/
+data/
+*.csv
+*.xlsx
+*.pdf
+*.txt
+
+# Editors
+.vscode/
+.idea/

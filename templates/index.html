@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+{% block title %}GHG Predictor — Upload{% endblock %}
+
+{% block content %}
+<form class="uploader" action="{{ url_for('predict') }}" method="post" enctype="multipart/form-data">
+  <header class="page-head">
+    <h1 class="title">Upload data</h1>
+    <p class="subtitle">
+      Train on <strong>2020–2022</strong>, auto-compute <strong>2023 polarity</strong> from your <strong>.txt</strong> files,
+      then predict 2023 and compute R² vs actuals.
+    </p>
+  </header>
+
+  <details class="exp">
+    <summary>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      Expected files
+    </summary>
+    <ul class="exp-list">
+      <li><strong>Historical CSV (2020–2022)</strong> — columns: Company, Year, {{ 'GHG Emissions/Car' }}, Total GHG Emissions, Net Income (Billions), Invested Money (Billions), Total Polarity (optional)</li>
+      <li><strong>2023 Sustainability Reports (TXT)</strong> — one or more .txt files (filenames should contain the company name; hyphens are fine)</li>
+      <li><strong>Actual 2023 CSV</strong> — columns: Company, Year, {{ 'GHG Emissions/Car' }} (for R²)</li>
+    </ul>
+  </details>
+
+  <!-- Historical CSV -->
+  <section class="card upload-card">
+    <div class="card-head">
+      <div class="label">Historical CSV (2020–2022)</div>
+      <span class="hint">.csv</span>
+    </div>
+    <div class="dropzone" data-accept=".csv" data-single>
+      <input id="histFile" name="historical_csv" type="file" accept=".csv" class="file-input" />
+      <div class="dz-body">
+        <div class="dz-icon" aria-hidden="true">📄</div>
+        <div class="dz-text">
+          <strong>Drag & drop</strong> your CSV here, or <button type="button" class="link browse">browse</button>
+        </div>
+        <div class="dz-sub">1 file · CSV</div>
+      </div>
+      <ul class="file-list" aria-live="polite"></ul>
+    </div>
+  </section>
+
+  <!-- 2023 TXT Reports (multiple) -->
+  <section class="card upload-card">
+    <div class="card-head">
+      <div class="label">2023 Sustainability Reports (TXT)</div>
+      <span class="hint">multiple .txt</span>
+    </div>
+    <div class="dropzone" data-accept=".txt" data-multiple>
+      <input id="txtFiles" name="reports" type="file" accept=".txt" class="file-input" multiple />
+      <div class="dz-body">
+        <div class="dz-icon" aria-hidden="true">🗂️</div>
+        <div class="dz-text">
+          <strong>Drag & drop</strong> TXT files here, or <button type="button" class="link browse">browse</button>
+        </div>
+        <div class="dz-sub"></div>
+      </div>
+      <ul class="file-list" aria-live="polite"></ul>
+    </div>
+  </section>
+
+  <!-- Actual CSV -->
+  <section class="card upload-card">
+    <div class="card-head">
+      <div class="label">Actual 2023 CSV (for R²)</div>
+      <span class="hint">.csv</span>
+    </div>
+    <div class="dropzone" data-accept=".csv" data-single>
+      <input id="actFile" name="actual_csv" type="file" accept=".csv" class="file-input" />
+      <div class="dz-body">
+        <div class="dz-icon" aria-hidden="true">📊</div>
+        <div class="dz-text">
+          <strong>Drag & drop</strong> your CSV here, or <button type="button" class="link browse">browse</button>
+        </div>
+        <div class="dz-sub">1 file · CSV</div>
+      </div>
+      <ul class="file-list" aria-live="polite"></ul>
+    </div>
+  </section>
+
+  <div class="actions">
+    <button class="btn primary" type="submit">
+      <span>Predict &amp; Score (R²)</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</form>
+
+<!-- Drag & drop + multi-pick accumulation JS -->
+<script>
+  // Pretty byte sizes
+  const fmt = b => {
+    if (!b && b !== 0) return "";
+    const u=['B','KB','MB','GB']; let i=0; while(b>=1024 && i<u.length-1){b/=1024;i++} return b.toFixed(b<10&&i?1:0)+' '+u[i];
+  };
+
+  document.querySelectorAll('.dropzone').forEach(zone => {
+    const input = zone.querySelector('.file-input');
+    const list  = zone.querySelector('.file-list');
+
+    // Accumulated file store so multiple browse/drop actions add up
+    zone._files = [];
+
+    // Click/keyboard to open picker
+    zone.addEventListener('click', e => {
+      if (e.target.closest('.browse') || e.target === zone || e.target.closest('.dz-body')) {
+        input.click();
+      }
+    });
+    zone.tabIndex = 0;
+    zone.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); }
+    });
+
+    const renderList = () => {
+      list.innerHTML = '';
+      zone._files.forEach(f => {
+        const li = document.createElement('li');
+        li.className = 'file-item';
+        li.innerHTML = `
+          <span class="name" title="${f.name}">${f.name}</span>
+          <span class="meta">${fmt(f.size)}</span>
+        `;
+        list.appendChild(li);
+      });
+    };
+
+    const setInputFromStore = () => {
+      const dt = new DataTransfer();
+      if (zone.hasAttribute('data-multiple')) {
+        zone._files.forEach(f => dt.items.add(f));
+      } else if (zone._files[0]) {
+        dt.items.add(zone._files[0]);
+      }
+      input.files = dt.files;
+      renderList();
+    };
+
+    const mergeFiles = newList => {
+      const key = f => `${f.name}|${f.size}|${f.lastModified}`;
+      const seen = new Set(zone._files.map(key));
+      newList.forEach(f => {
+        const k = key(f);
+        if (!seen.has(k)) { zone._files.push(f); seen.add(k); }
+      });
+    };
+
+    input.addEventListener('change', () => {
+      if (zone.hasAttribute('data-multiple')) {
+        mergeFiles([...input.files]);         // accumulate across picks
+      } else {
+        zone._files = [...input.files].slice(0,1);
+      }
+      setInputFromStore();
+    });
+
+    // Drag & drop visuals
+    ['dragenter','dragover'].forEach(evt => {
+      zone.addEventListener(evt, e => {
+        e.preventDefault(); e.stopPropagation();
+        zone.classList.add('is-dragover');
+      });
+    });
+    ['dragleave','drop'].forEach(evt => {
+      zone.addEventListener(evt, e => {
+        e.preventDefault(); e.stopPropagation();
+        zone.classList.remove('is-dragover');
+      });
+    });
+
+    zone.addEventListener('drop', e => {
+      const accept = (zone.dataset.accept || '').split(',').map(s=>s.trim().toLowerCase()).filter(Boolean);
+      let files = [...e.dataTransfer.files];
+      if (accept.length) files = files.filter(f => accept.some(a => f.name.toLowerCase().endsWith(a)));
+
+      if (zone.hasAttribute('data-multiple')) {
+        mergeFiles(files);
+      } else {
+        zone._files = files.slice(0,1);
+      }
+      setInputFromStore();
+    });
+  });
+</script>
+{% endblock %}

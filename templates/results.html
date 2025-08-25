@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}GHG Predictor — Results{% endblock %}
+
+{% block content %}
+<section class="card results-card">
+  <h1 class="title">Results</h1>
+
+  <div class="r2-banner">
+    {% if r2 is not none %}
+      R² (Predicted 2023 vs Actual 2023): {{ '%.4f' % r2 }}
+    {% else %}
+      R² could not be computed (need at least 2 companies with actuals).
+    {% endif %}
+  </div>
+
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Company</th>
+          <th class="t-num">Year</th>
+          <th class="t-num">Predicted GHG Emissions/Car</th>
+          <th class="t-num">Actual GHG Emissions/Car</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in tables %}
+          <tr>
+            <td>{{ row['Company'] }}</td>
+            <td class="t-num">{{ row['Year'] }}</td>
+            <td class="t-num">
+              {{ '%.4f' % row['Predicted GHG Emissions/Car'] if row['Predicted GHG Emissions/Car'] is not none else '' }}
+            </td>
+            <td class="t-num">
+              {{ '%.4f' % row['Actual GHG Emissions/Car'] if row['Actual GHG Emissions/Car'] is not none else '' }}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="actions actions-left">
+    <a class="btn ghost" href="{{ url_for('index') }}">Back</a>
+  </div>
+</section>
+{% endblock %}
