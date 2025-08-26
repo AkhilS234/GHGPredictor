@@ -31,3 +31,8 @@ python app.py
 ### App URL
 
 - [http://127.0.0.1:5000/](http://127.0.0.1:5000/) 
+
+### Inputs
+
+- Historical CSV with columns: Company, Year, GHG Emissions/Car, Total GHG Emissions, Net Income (Billions), Invested Money (Billions), and Total Polarity
+
