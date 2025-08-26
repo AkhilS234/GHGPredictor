@@ -7,3 +7,21 @@ This model predicts **GHG Emissions per Vehicle** for multiple vehicle companies
 The app also computes **R²** to quantify how well predictions align with the **actual 2023** GHG/vehicle values.
 
 ---
+
+## Quick start
+
+```bash
+# clone & enter
+git clone https://github.com/<your-username>/GHGPredictor.git
+cd GHGPredictor
+
+# (recommended) virtual env
+python3 -m venv .venv
+source .venv/bin/activate     # Windows: .venv\Scripts\activate
+
+# install deps
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+
+# run
+python app.py
