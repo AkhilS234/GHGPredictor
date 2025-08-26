@@ -37,3 +37,7 @@ python app.py
 - Historical CSV with columns: Company, Year, GHG Emissions/Car, Total GHG Emissions, Net Income (Billions), Invested Money (Billions), and Total Polarity
 - 2023 Sustainability Report .txt file (must contain company name in file name)
 - Actual 2023 data CSV for computing **R²** values
+
+### Website Interface
+
+![alt text](Website.png)
