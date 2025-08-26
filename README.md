@@ -15,7 +15,7 @@ The app also computes **R²** to quantify how well predictions align with the **
 git clone https://github.com/<your-username>/GHGPredictor.git
 cd GHGPredictor
 
-# (recommended) virtual env
+# virtual env
 python3 -m venv .venv
 source .venv/bin/activate     # Windows: .venv\Scripts\activate
 
