@@ -26,6 +26,8 @@ pip install -r requirements.txt
 # run
 python app.py
 
+```
+
 ### App URL
 
 - **Local:** [http://127.0.0.1:5000/](http://127.0.0.1:5000/)  
