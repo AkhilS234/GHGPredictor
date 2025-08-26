@@ -1,9 +1,9 @@
 # GHGPredictor
 
-Predict **GHG Emissions per Vehicle** for multiple automakers by combining:
-- **Historical metrics (2020–2022)**, and
+This model predicts **GHG Emissions per Vehicle** for multiple vehicle companies by combining:
+- **Historical data from 2020–2022**, and
 - **Sentiment extracted from the company’s 2023 sustainability report (.txt)**
 
-The app also computes **R²** to quantify how well predictions align with **actual 2023** GHG/vehicle values.
+The app also computes **R²** to quantify how well predictions align with the **actual 2023** GHG/vehicle values.
 
 ---
