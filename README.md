@@ -26,4 +26,8 @@ pip install -r requirements.txt
 # run
 python app.py
 
-**App URL (local):** http://127.0.0.1:5000/ 
+### App URL
+
+- **Local:** [http://127.0.0.1:5000/](http://127.0.0.1:5000/)  
+- **Alt local:** [http://localhost:5000/](http://localhost:5000/)  
+- **Live (when deployed):** https://<your-app-name>.onrender.com/
