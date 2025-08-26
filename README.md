@@ -30,6 +30,4 @@ python app.py
 
 ### App URL
 
-- **Local:** [http://127.0.0.1:5000/](http://127.0.0.1:5000/)  
-- **Alt local:** [http://localhost:5000/](http://localhost:5000/)  
-- **Live (when deployed):** https://<your-app-name>.onrender.com/
+- [http://127.0.0.1:5000/](http://127.0.0.1:5000/) 
