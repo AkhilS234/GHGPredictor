@@ -6,6 +6,8 @@ This model predicts **GHG Emissions per Vehicle** for multiple vehicle companies
 
 The app also computes **R²** to quantify how well predictions align with the **actual 2023** GHG/vehicle values.
 
+Including polarity (sentiment) from the company’s annual report on its GHG-emissions strategy improved the model’s R² from 0.40 to 0.76.
+
 ---
 
 ## Quick start
