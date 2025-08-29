@@ -2,7 +2,7 @@
 
 This model predicts **GHG Emissions per Vehicle** for multiple vehicle companies by combining:
 - **Historical data from 2020–2022**, and
-- ** Uses OpenAI GPT-4o mini for sentiment analysis on extracted text from company sustainability reports (.txt)**
+- **Uses OpenAI GPT-4o mini for sentiment analysis on extracted text from company sustainability reports (.txt)**
 
 The app also computes **R²** to quantify how well predictions align with the **actual 2023** GHG/vehicle values.
 
