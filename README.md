@@ -45,3 +45,9 @@ python app.py
 ![alt text](Website.png)
 
 ![alt text](Results.png)
+
+## Future
+
+1. Further explore on more sources for trend analysis.
+2. Observed that there is a correlation amongst the car companies based on where they are manufactured (US, EU, Japan). Need to incorporate this factor in the model for further improvements.
+3. Global sentiment around ESG and GHG needs to be incorporated for overall trend analysis. 
